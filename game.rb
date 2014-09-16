@@ -13,7 +13,9 @@ class GameWindow < Gosu::Window
   def initialize
     super 800, 600, false
 
-    @player = Player.new(self, 400, 300)
+    @player = Player.new(self, 400, 50)
+    @ai_on = Gosu::Font.new(self, "helvetica", 20)
+    @collision = 10
     @enemies = []
 
     generate_enemies
@@ -21,18 +23,31 @@ class GameWindow < Gosu::Window
 
   def generate_enemies
     20.times do
-      enemies << Enemy.new(self, rand(800), rand(300))
+      @enemies << Enemy.new(self, rand(800), rand(300))
     end
   end
 
   def draw
     @player.draw
-    enemies.each {|e| e.draw}
+    @enemies.each {|e| e.draw}
+    @ai_on.draw("#{@collision}", 345, 30, 0, 1.0, 1.0, 0xffffffff)
   end
 
   def update
     @player.update
-    enemies.each {|e| e.update}
+    @enemies.each {|e| e.update}
+
+    enemy_collision?
+  end
+
+  def enemy_collision?
+    @enemies.each do |enemy|
+      if enemy.collide?(@player.x, @player.y) == true
+        @collision = true
+      elsif enemy.collide?(@player.x, @player.y) == false
+        @collision = false
+      end
+    end
   end
 
 end

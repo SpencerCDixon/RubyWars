@@ -1,37 +1,37 @@
 module Keys
   def button_down(id)
     if id == Gosu::KbW
-      @player.up = true
+      @player.move_up = true
     end
 
     if id == Gosu::KbS
-      @player.down = true
+      @player.move_down = true
     end
 
     if id == Gosu::KbA
-      @player.left = true
+      @player.move_left = true
     end
 
     if id == Gosu::KbD
-      @player.right = true
+      @player.move_right = true
     end
   end
 
   def button_up(id)
     if id == Gosu::KbW
-      @player.up = false
+      @player.move_up = false
     end
 
     if id == Gosu::KbS
-      @player.down = false
+      @player.move_down = false
     end
 
     if id == Gosu::KbA
-      @player.left = false
+      @player.move_left = false
     end
 
     if id == Gosu::KbD
-      @player.right = false
+      @player.move_right = false
     end
   end
 end

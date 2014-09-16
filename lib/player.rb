@@ -1,17 +1,18 @@
 class Player
   include BoundingBox
-  attr_accessor :x, :y, :up, :down, :right, :left
+  attr_accessor :x, :y, :move_up, :move_down, :move_right, :move_left
 
   def initialize(window, x, y)
     @player_image = Gosu::Image.new(window, 'img/ruby.jpg')
     @x = x
     @y = y
-    bounding(@x, @y, 29, 29)
 
-    @up = false
-    @down = false
-    @right = false
-    @left = false
+    @move_up = false
+    @move_down = false
+    @move_right = false
+    @move_left = false
+
+    bounding(@x, @y, 29, 29)
 
   end
 
@@ -20,11 +21,12 @@ class Player
   end
 
   def update
-    up ? @y += -7 : @y
-    down ? @y += 7 : @y
-    right ? @x += 7 : @x
-    left ? @x += -7 : @x
+    if move_up then @y += -7 end
+    if move_down then @y += 7 end
+    if move_right then @x += 7 end
+    if move_left then @x += -7 end
     bounding(@x, @y, 29, 29)
+
   end
 
 end
