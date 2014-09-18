@@ -17,30 +17,34 @@ class GameWindow < Gosu::Window
   SCREEN_HEIGHT = 600
 
   include Keys
-  attr_accessor :enemies
+  attr_accessor :enemies, :large_font
 
   def initialize
     super(SCREEN_WIDTH, SCREEN_HEIGHT, false)
     @background = Background.new(self, 0, 0)
 
     @player = Player.new(self, 400, 50)
-    @ai_on = Gosu::Font.new(self, "helvetica", 20)
+    @small_font = Gosu::Font.new(self, "helvetica", 20)
     @collision = 10
 
     #Enemies + Bullets
     @enemies = []
-    @spawn_rate = 6
-    @spawn_acc = 45
+    @spawn_rate = 5
+    @spawn_acc = 15
     @bullets = []
 
     # Timer & Counters
     @timer = Timer.new
-    @show_timer = Gosu::Font.new(self, "helvetica", 20)
     @counter_spawn = 0
     @counter_rate = 0
 
+    # Game & Player Mechanics
     @name = NAME
     @score = 0
+    @state = :menu
+
+    # Font and Menu
+    @large_font = Gosu::Font.new(self, "Arial", SCREEN_HEIGHT / 6)
   end
 
   def summon_enemies
@@ -49,7 +53,7 @@ class GameWindow < Gosu::Window
       @counter_spawn = 0
     end
     if @counter_rate >= (@spawn_acc * 60)
-      @spawn_rate -= 1 if @spaw_rate > 1
+      @spawn_rate -= 1 if @spawn_rate > 1
       @counter_rate = 0
     end
   end
@@ -59,27 +63,33 @@ class GameWindow < Gosu::Window
     @background.draw
     @player.draw
     @enemies.each {|e| e.draw} if !@enemies.empty?
-    @show_timer.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}, #{@spawn_rate}, E = #{@enemies.size}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
-    @ai_on.draw("#{@score}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
+    @small_font.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}, #{@spawn_rate}, E = #{@enemies.size}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
+    @small_font.draw("#{@score}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
     @bullets.each {|b| b.draw} if !@bullets.empty?
+
+    if @state == :lose
+      draw_text_centered("Game Over", large_font)
+    end
   end
 
   def update
-    @counter_spawn += 1
-    @counter_rate += 1
-    @player.update
-    @timer.update
-    @enemies.each {|e| e.update}
-    if !@bullets.empty? then @bullets.each {|b| b.update} end
+    unless @state == :lose
+      @counter_spawn += 1
+      @counter_rate += 1
+      @player.update
+      @timer.update
+      @enemies.each {|e| e.update}
+      if !@bullets.empty? then @bullets.each {|b| b.update} end
 
-    summon_enemies
-    enemy_collision?
-    bullet_collision?
+      summon_enemies
+      enemy_collision?
+      bullet_collision?
+    end
   end
 
   def enemy_collision?
     @enemies.any? do |enemy|
-      @collision -= 1 if enemy.collide?(@player.x, @player.y)
+      @state = :lose if enemy.collide?(@player.x, @player.y)
     end
   end
 
@@ -89,12 +99,26 @@ class GameWindow < Gosu::Window
         @enemies.any? do |enemy|
           if bullet.collide?(enemy.x, enemy.y)
             @enemies.delete(enemy)
-            @score += 100
+            @score += (100 * (@timer.seconds / 5))
           end
         end
       end
     end
   end
+
+  # Building Menu
+  def draw_text_centered(text, font)
+    x = (SCREEN_WIDTH - font.text_width(text)) / 2
+    y = (SCREEN_HEIGHT - font.height) / 2
+    color = Gosu::Color::RED
+
+    draw_text(x, y, text, font, color)
+  end
+
+  def draw_text(x, y, text, font, color)
+    font.draw(text, x, y, 3, 1, 1, color)
+  end
+
 
 end
 
