@@ -1,12 +1,15 @@
 class Bullet
   include BoundingBox
 
-  def initialize(window, x, y)
+  def initialize(window, x, y, x_speed, y_speed)
     @window = window
     @x = x
     @y = y
+    @x_speed = x_speed
+    @y_speed = y_speed
     @bullet_image = Gosu::Image.new(window, 'img/laser.png')
-    @velocity = 1
+    @speed = 1
+    @direction = #figure out
 
     @bounding = bounding(@x, @y, 64, 64)
   end
@@ -16,7 +19,8 @@ class Bullet
   end
 
   def update
-    @x += 10 * @velocity
+    @x += 10 * @x_speed
+    @y += 10 * @y_speed
     @bounding = bounding(@x, @y, 64, 64)
   end
 

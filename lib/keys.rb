@@ -17,7 +17,7 @@ module Keys
     end
 
     if id == Gosu::KbSpace
-      @bullets << Bullet.new(self, @player.x, @player.y)
+      @bullets << @player.fire
     end
   end
 
