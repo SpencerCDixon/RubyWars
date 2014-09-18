@@ -1,12 +1,12 @@
 class Enemy
   include BoundingBox
   # attr_accessor :random_movement
-
+  attr_reader :x, :y
   def initialize(window, x, y)
     @enemy_image = Gosu::Image.new(window, 'img/circle_blue.png')
     @x = x
     @y = y
-    @random_movement = (1..10).to_a
+    @random_movement = (1..5).to_a
     @picked = @random_movement.sample
     # generate_random_points
     @bounding = bounding(@x, @y, 48, 48)

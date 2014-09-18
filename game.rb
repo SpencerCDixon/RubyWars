@@ -1,5 +1,4 @@
 # Ruby Wars V1
-
 require 'gosu'
 
 require_relative 'lib/bounding_box'
@@ -8,7 +7,6 @@ require_relative 'lib/keys'
 require_relative 'lib/enemies'
 require_relative 'lib/background'
 require_relative 'lib/bullet'
-
 
 class GameWindow < Gosu::Window
   include Keys
@@ -28,7 +26,7 @@ class GameWindow < Gosu::Window
   end
 
   def generate_enemies
-    20.times do
+    10.times do
       @enemies << Enemy.new(self, rand(800), rand(600))
     end
   end
@@ -44,14 +42,25 @@ class GameWindow < Gosu::Window
   def update
     @player.update
     @enemies.each {|e| e.update}
-    !@bullets.empty? ? @bullets.each {|b| b.update} : nil
+    if !@bullets.empty? then @bullets.each {|b| b.update} end
 
     enemy_collision?
+    bullet_collision?
   end
 
   def enemy_collision?
     @enemies.any? do |enemy|
       enemy.collide?(@player.x, @player.y) ? @collision = true : @collision = false
+    end
+  end
+
+  def bullet_collision?
+    unless @bullets.empty?
+      @bullets.any? do |bullet|
+        @enemies.any? do |enemy|
+          if bullet.collide?(enemy.x, enemy.y) then @enemies.delete(enemy) end
+        end
+      end
     end
   end
 
