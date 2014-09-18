@@ -7,6 +7,7 @@ require_relative 'lib/player'
 require_relative 'lib/keys'
 require_relative 'lib/enemies'
 require_relative 'lib/background'
+require_relative 'lib/bullet'
 
 
 class GameWindow < Gosu::Window
@@ -22,6 +23,7 @@ class GameWindow < Gosu::Window
     @collision = 10
 
     @enemies = []
+    @bullets = []
     generate_enemies
   end
 
@@ -36,22 +38,20 @@ class GameWindow < Gosu::Window
     @player.draw
     @enemies.each {|e| e.draw}
     @ai_on.draw("#{@collision}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
+    !@bullets.empty? ? @bullets.each {|b| b.draw} : nil
   end
 
   def update
     @player.update
     @enemies.each {|e| e.update}
+    !@bullets.empty? ? @bullets.each {|b| b.update} : nil
 
     enemy_collision?
   end
 
   def enemy_collision?
-    @enemies.each do |enemy|
-      if enemy.collide?(@player.x, @player.y)
-        @collision = true
-      else
-        @collision = false
-      end
+    @enemies.any? do |enemy|
+      enemy.collide?(@player.x, @player.y) ? @collision = true : @collision = false
     end
   end
 

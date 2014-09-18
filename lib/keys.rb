@@ -15,6 +15,10 @@ module Keys
     if id == Gosu::KbD
       @player.move_right = true
     end
+
+    if id == Gosu::KbSpace
+      @bullets << Bullet.new(self, @player.x, @player.y)
+    end
   end
 
   def button_up(id)

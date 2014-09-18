@@ -19,7 +19,6 @@ class Enemy
   end
 
   def update
-
     case
     when  @x >= 752 || @y >= 552
       @bounce = true
@@ -36,9 +35,7 @@ class Enemy
       @y += @picked
     end
 
-
     @bounding = bounding(@x, @y, 48, 48)
-
   end
 
 end
