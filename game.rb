@@ -23,13 +23,11 @@ class GameWindow < Gosu::Window
 
     @enemies = []
     generate_enemies
-
-
   end
 
   def generate_enemies
     20.times do
-      @enemies << Enemy.new(self, rand(800), rand(300))
+      @enemies << Enemy.new(self, rand(800), rand(600))
     end
   end
 
@@ -37,7 +35,7 @@ class GameWindow < Gosu::Window
     @background.draw
     @player.draw
     @enemies.each {|e| e.draw}
-    @ai_on.draw("#{@collision}", 345, 30, 0, 1.0, 1.0, 0xffffffff)
+    @ai_on.draw("#{@collision}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
   end
 
   def update
@@ -49,9 +47,9 @@ class GameWindow < Gosu::Window
 
   def enemy_collision?
     @enemies.each do |enemy|
-      if enemy.collide?(@player.x, @player.y) == true
+      if enemy.collide?(@player.x, @player.y)
         @collision = true
-      elsif enemy.collide?(@player.x, @player.y) == false
+      else
         @collision = false
       end
     end
@@ -59,5 +57,4 @@ class GameWindow < Gosu::Window
 
 end
 
-window = GameWindow.new
-window.show
+GameWindow.new.show

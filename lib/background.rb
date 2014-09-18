@@ -7,6 +7,6 @@ class Background
   end
 
   def draw
-    @bg_image.draw(@x, @y, 1)
+    @bg_image.draw(@x, @y, 0)
   end
 end

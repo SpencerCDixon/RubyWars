@@ -12,7 +12,7 @@ class Player
     @move_right = false
     @move_left = false
 
-    bounding(@x, @y, 29, 29)
+    @bounding = bounding(@x, @y, 29, 29)
 
   end
 
@@ -25,7 +25,7 @@ class Player
     if move_down then @y += 7 end
     if move_right then @x += 7 end
     if move_left then @x += -7 end
-    bounding(@x, @y, 29, 29)
+    @bounding = bounding(@x, @y, 29, 29)
 
   end
 

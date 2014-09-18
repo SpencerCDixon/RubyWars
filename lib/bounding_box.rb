@@ -6,16 +6,11 @@ module BoundingBox
     @bottom = bottom
     @width = width
     @height = height
-
     @right = @left + @width
     @top = @bottom + @height
   end
 
-  def collide?(x,y)
-    if x >= @left && x <= @right && y >= @bottom && y <= @top
-      true
-    else
-      false
-    end
+  def collide?(x, y)
+    x >= left && x <= right && y >= bottom && y <= top
   end
 end

@@ -9,7 +9,7 @@ class Enemy
     @random_movement = (1..10).to_a
     @picked = @random_movement.sample
     # generate_random_points
-    bounding(@x, @y, 48, 48)
+    @bounding = bounding(@x, @y, 48, 48)
     @bounce = false
   end
 
@@ -19,7 +19,6 @@ class Enemy
   end
 
   def update
-
 
     case
     when  @x >= 752 || @y >= 552
@@ -33,30 +32,12 @@ class Enemy
       @x += -@picked
       @y += -@picked
     else
-
-
       @x += @picked
       @y += @picked
     end
-    #
-    # if @bounce == true
-    #   if @x >= 752
-    #     @bounce = true
-    #     @x += -3
-    #
-    #     @x +=   3
-    #   end
-    #
-    #
-    #
-    #   if @y >= 552
-    #     @bounce = true
-    #     @y += -3
-    #   elsif @bounce == false
-    #     @y += 3
-    #   end
 
-    bounding(@x, @y, 48, 48)
+
+    @bounding = bounding(@x, @y, 48, 48)
 
   end
 
