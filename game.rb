@@ -1,10 +1,13 @@
 # Ruby Wars V1
 
 require 'gosu'
+
 require_relative 'lib/bounding_box'
 require_relative 'lib/player'
 require_relative 'lib/keys'
 require_relative 'lib/enemies'
+require_relative 'lib/background'
+
 
 class GameWindow < Gosu::Window
   include Keys
@@ -12,13 +15,16 @@ class GameWindow < Gosu::Window
 
   def initialize
     super 800, 600, false
+    @background = Background.new(self, 0, 0)
 
     @player = Player.new(self, 400, 50)
     @ai_on = Gosu::Font.new(self, "helvetica", 20)
     @collision = 10
-    @enemies = []
 
+    @enemies = []
     generate_enemies
+
+
   end
 
   def generate_enemies
@@ -28,6 +34,7 @@ class GameWindow < Gosu::Window
   end
 
   def draw
+    @background.draw
     @player.draw
     @enemies.each {|e| e.draw}
     @ai_on.draw("#{@collision}", 345, 30, 0, 1.0, 1.0, 0xffffffff)
