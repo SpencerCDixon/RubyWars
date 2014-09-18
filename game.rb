@@ -1,5 +1,6 @@
 # Ruby Wars V1
 require 'gosu'
+require 'pry'
 
 require_relative 'lib/bounding_box'
 require_relative 'lib/player'
@@ -9,6 +10,7 @@ require_relative 'lib/background'
 require_relative 'lib/bullet'
 require_relative 'lib/timer'
 
+NAME = ARGV[0] || "Anonymous"
 
 class GameWindow < Gosu::Window
   SCREEN_WIDTH = 800
@@ -26,49 +28,57 @@ class GameWindow < Gosu::Window
     @collision = 10
 
     @enemies = []
+    @spawn_rate = 10
+    @spawn_acc = 60
     @bullets = []
-    generate_enemies
+    # generate_enemies
 
     @timer = Timer.new
     @show_timer = Gosu::Font.new(self, "helvetica", 20)
+    @counter_spawn = 0
+    @counter_rate = 0
+
+    @name = NAME
   end
 
-  def generate_enemies
-    10.times do
+  # def generate_enemies
+  #   10.times do
+  #     @enemies << Enemy.new(self, rand(800), rand(600))
+  #   end
+  # end
+
+  def summon_enemies
+
+    if @counter_spawn >= (@spawn_rate * 60)
       @enemies << Enemy.new(self, rand(800), rand(600))
+      @counter_spawn = 0
     end
-  end
-
-  def gen_e
-    @spawn_rate = 10
-    @spawn_acc = 60
-
-    case
-    when @timer.seconds % @spawn_rate == 0
-      @enemies << Enemy.new(self, rand(800), rand(600))
-    when
-
+    if @counter_rate >= (@spawn_acc * 60)
+      @spawn_rate -= 3
+      @counter_rate = 0
     end
 
   end
-
 
 
   def draw
     @background.draw
     @player.draw
-    @enemies.each {|e| e.draw}
-    @show_timer.draw("#{@timer.seconds}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
+    @enemies.each {|e| e.draw} if !@enemies.empty?
+    @show_timer.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}, #{@spawn_rate}, E = #{@enemies.size}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
     @ai_on.draw("#{@collision}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
-    !@bullets.empty? ? @bullets.each {|b| b.draw} : nil
+    @bullets.each {|b| b.draw} if !@bullets.empty?
   end
 
   def update
+    @counter_spawn += 1
+    @counter_rate += 1
     @player.update
     @timer.update
     @enemies.each {|e| e.update}
     if !@bullets.empty? then @bullets.each {|b| b.update} end
 
+    summon_enemies
     enemy_collision?
     bullet_collision?
   end

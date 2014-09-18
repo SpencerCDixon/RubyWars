@@ -1,3 +1,5 @@
+require "set"
+
 class Player
   include BoundingBox
   attr_accessor :x, :y, :direction
@@ -12,7 +14,7 @@ class Player
     @move_down = false
     @move_right = false
     @move_left = false
-    @direction = :right
+    @direction = Set.new([:right])
 
     @bounding = bounding(@x, @y, 29, 29)
     @window = window
@@ -20,22 +22,51 @@ class Player
 
   def move_left=(value)
     @move_left = value
-    @direction = :left if value
+    if value
+      @direction.add(:left)
+      @direction.delete(:right)
+    else
+      if @direction.size > 1
+        @direction.delete(:right)
+      end
+    end
   end
 
   def move_right=(value)
     @move_right = value
-    @direction = :right if value
+    if value
+      @direction.add(:right)
+      @direction.delete(:left)
+    else
+        if @direction.size > 1
+          @direction.delete(:right)
+        end
+    end
+
   end
 
   def move_up=(value)
     @move_up = value
-    @direction = :up if value
+    if value
+      @direction.add(:up)
+      @direction.delete(:down)
+    else
+      if @direction.size > 1
+        @direction.delete(:up)
+      end
+    end
   end
 
   def move_down=(value)
     @move_down = value
-    @direction = :down if value
+    if value
+      @direction.add(:down)
+      @direction.delete(:up)
+    else
+      if @direction.size > 1
+        @direction.delete(:down)
+      end
+    end
   end
 
   def fire
@@ -47,16 +78,24 @@ class Player
     #   y_speed = -0.6
     # elsif @direction.include?(:up)
     #   y_speed = -1.0
-    case @direction
-    when :up
-      y_speed = -1.0
-    when :down
-      y_speed = 1.0
-    when :right
-      x_speed = 1.0
-    when :left
-      x_speed = -1.0
-    end
+
+    x_speed += 1.0 if @direction.include?(:right)
+    x_speed -= 1.0 if @direction.include?(:left)
+
+    y_speed += 1.0 if @direction.include?(:down)
+    y_speed -= 1.0 if @direction.include?(:up)
+
+
+    # case @direction
+    # when :up
+    #   y_speed = -1.0
+    # when :down
+    #   y_speed = 1.0
+    # when :right
+    #   x_speed = 1.0
+    # when :left
+    #   x_speed = -1.0
+    # end
 
     Bullet.new(@window, x, y, x_speed, y_speed)
   end
