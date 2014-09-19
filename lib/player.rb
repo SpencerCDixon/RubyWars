@@ -5,7 +5,7 @@ class Player
   attr_reader :move_up, :move_down, :move_right, :move_left, :bounds
 
   def initialize(window, x, y)
-    @player_image = Gosu::Image.new(window, 'img/ruby.jpg')
+    @player_image = Gosu::Image.new(window, 'img/ruby_small.png')
     @window = window
     @x = x
     @y = y
@@ -18,7 +18,10 @@ class Player
     @move_left = false
     @direction = Set.new([])
 
+  end
 
+  def bounds
+    BoundingBox.new(@x, @y, 50, 50)
   end
 
   def move_left=(value)
@@ -89,8 +92,5 @@ class Player
     # end
   end
 
-  def bounds
-    BoundingBox.new(@x, @y, 29, 29)
-  end
 
 end

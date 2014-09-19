@@ -28,14 +28,6 @@ class Enemy
 
     if @bounce == true
 
-      # @picked = @random_movement.sample
-      # if @player.x < @x
-      #   @p1 = @player
-      #   @p2 = self
-      # else
-      #   @p1 = selfs
-      #   @p2 = @player
-      # end
       calculate_slope(@player, self)
 
        @x += -(@slope_x / 60.0)

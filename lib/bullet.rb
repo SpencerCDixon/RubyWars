@@ -6,14 +6,14 @@ class Bullet
     @y = y
     @x_speed = x_speed
     @y_speed = y_speed
-    @bullet_image = Gosu::Image.new(window, 'img/laser.png')
+    @bullet_image = Gosu::Image.new(window, 'img/ruby_shard.png')
     @direction = direction.first.to_s
 
     @speed = 1
 
   end
   def bounds
-    BoundingBox.new(@x, @y, 64, 64)
+    BoundingBox.new(@x, @y, 9, 9)
   end
 
   def draw

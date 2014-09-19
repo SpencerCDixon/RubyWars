@@ -88,10 +88,8 @@ class GameWindow < Gosu::Window
 
   def enemy_collision?
     @enemies.any? do |enemy|
-      puts "collision check"
      if enemy.bounds.intersects?(@player.bounds)
        @state = :lose
-       puts "Lose"
      end
     end
   end
@@ -100,7 +98,7 @@ class GameWindow < Gosu::Window
     unless @bullets.empty?
       @bullets.any? do |bullet|
         @enemies.any? do |enemy|
-          if bullet.collide?(enemy.x, enemy.y)
+          if bullet.bounds.intersects?(enemy.bounds)
             @enemies.delete(enemy)
             @score += (100 * (@timer.seconds / 5))
           end
