@@ -1,5 +1,5 @@
 class Player
-  attr_accessor :x, :y, :move_up, :move_down, :move_right, :move_left
+  attr_accessor :x, :y, :move_up, :move_down, :move_right, :move_left, :player_speed
   attr_reader :bounds
 
   def initialize(window, x, y)

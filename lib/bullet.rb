@@ -7,7 +7,6 @@ class Bullet
     @x_speed = x_speed
     @y_speed = y_speed
     @bullet_image = Gosu::Image.new(window, 'img/ruby_shard.png')
-
   end
 
   def bounds

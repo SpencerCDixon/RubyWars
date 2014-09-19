@@ -9,28 +9,32 @@ require_relative 'lib/enemies'
 require_relative 'lib/background'
 require_relative 'lib/bullet'
 require_relative 'lib/timer'
+require_relative 'lib/power_ups/speed'
+
 
 NAME = ARGV[0] || "Anonymous"
 
 class GameWindow < Gosu::Window
   SCREEN_WIDTH = 800
   SCREEN_HEIGHT = 600
+  POWER_UP_FREQUENCY = 3
+  POWER_UP_LENGTH = 10
 
   include Keys
+  attr_reader :timer, :player
   attr_accessor :enemies, :large_font
 
   def initialize
     super(SCREEN_WIDTH, SCREEN_HEIGHT, false)
     @background = Background.new(self, 0, 0)
-
     @player = Player.new(self, 400, 50)
-    @small_font = Gosu::Font.new(self, "helvetica", 20)
-    @collision = 10
+    @power_ups = [SpeedBoost.new(self, rand(800), rand(600))]
+    @current_boost = []
 
-    #Enemies + Bullets
-    @enemies = []
+    # Enemies + Bullets
     @spawn_rate = 5.0
     @spawn_acc = 15.0
+    @enemies = []
     @bullets = []
 
     # Timer & Counters
@@ -45,10 +49,12 @@ class GameWindow < Gosu::Window
 
     # Font and Menu
     @large_font = Gosu::Font.new(self, "Arial", SCREEN_HEIGHT / 6)
+    @small_font = Gosu::Font.new(self, "helvetica", 20)
   end
 
   def draw
     @background.draw
+
     @player.draw
     @enemies.each {|e| e.draw} if !@enemies.empty?
     @small_font.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}, #{@spawn_rate}, E = #{@enemies.size}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
@@ -58,6 +64,12 @@ class GameWindow < Gosu::Window
     if @state == :lose
       draw_text_centered("Game Over", large_font)
     end
+
+    if timer.seconds >= POWER_UP_FREQUENCY && timer.seconds <= (POWER_UP_FREQUENCY + POWER_UP_LENGTH)
+      @dropped_power_up = @power_ups.first
+      @dropped_power_up.draw
+    end
+    power_up_draw? if !@dropped_power_up.nil?
   end
 
   def update
@@ -67,11 +79,12 @@ class GameWindow < Gosu::Window
       @player.update
       @timer.update
       @enemies.each {|e| e.update}
-      if !@bullets.empty? then @bullets.each {|b| b.update} end
+      @bullets.each {|b| b.update} if !@bullets.empty?
 
       summon_enemies
       enemy_collision?
       bullet_collision?
+      power_up_boost? if !@dropped_power_up.nil?
     end
   end
 
@@ -104,6 +117,21 @@ class GameWindow < Gosu::Window
           end
         end
       end
+    end
+  end
+
+  def power_up_draw?
+    if @dropped_power_up.bounds.intersects?(@player.bounds)
+      puts "Power up!"
+      @small_font.draw("gem install rails...", 300, 300, 5, 1.0, 1.0, 0xffffffff)
+    end
+  end
+
+  def power_up_boost?
+    if @dropped_power_up.bounds.intersects?(@player.bounds)
+      @current_boost << @dropped_power_up
+      @current_boost.first.boost
+      @current_boost.delete(@dropped_power_up)
     end
   end
 
