@@ -77,7 +77,7 @@ class GameWindow < Gosu::Window
 
   def summon_enemies
     if @counter_spawn >= (@spawn_rate * 60.0)
-      @enemies << Enemy.new(self, rand(800), rand(600), @player)
+      @enemies << Enemy.new(self, rand(200), rand(200), @player)
       @counter_spawn = 0
     end
     if @counter_rate >= (@spawn_acc * 60.0)

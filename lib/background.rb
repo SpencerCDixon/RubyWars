@@ -3,7 +3,7 @@ class Background
     @window = window
     @y = y
     @x = x
-    @bg_image = Gosu::Image.new(window, 'img/Space-Background.jpg')
+    @bg_image = Gosu::Image.new(window, 'img/bg.png')
   end
 
   def draw

@@ -1,4 +1,5 @@
 module Keys
+
   def button_down(id)
     if id == Gosu::KbW
       @player.move_up = true
@@ -12,8 +13,17 @@ module Keys
     if id == Gosu::KbD
       @player.move_right = true
     end
-    if id == Gosu::KbSpace
-      @bullets << @player.fire
+
+    # Bullets
+    case
+    when id == Gosu::KbI
+      @bullets << @player.fire(:up)
+    when id == Gosu::KbK
+      @bullets << @player.fire(:down)
+    when id == Gosu::KbL
+      @bullets << @player.fire(:left)
+    when id == Gosu::KbJ
+      @bullets << @player.fire(:right)
     end
   end
 

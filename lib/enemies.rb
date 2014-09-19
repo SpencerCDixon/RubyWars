@@ -1,22 +1,20 @@
 class Enemy
-  SPEED = 4
-  attr_reader :x, :y, :player
+
+  attr_reader :x, :y, :player, :speed
 
   def initialize(window, x, y, player)
     @enemy_image = Gosu::Image.new(window, 'img/circle_blue.png')
+    @player = player
     @window = window
-    @starting_x = x
-    @starting_y = y
     @x = x
     @y = y
 
-
-    @random_movement = (1..3).to_a
-    @picked = @random_movement.sample
-    # @bounding = Bounding.new(@x, @y, 48, 48)
+    @speed = 4
     @bounce = false
+  end
 
-    @player = player
+  def bounds
+    BoundingBox.new(@x, @y, 48, 48)
   end
 
   def draw
@@ -33,40 +31,15 @@ class Enemy
 
       distance = Math.sqrt((dx * dx) + (dy * dy))
 
-      vel_x = (dx / distance) * SPEED
-      vel_y = (dy / distance) * SPEED
+      vel_x = (dx / distance) * speed
+      vel_y = (dy / distance) * speed
 
       @x += vel_x
       @y += vel_y
     else
-      @x += @picked
-      @y += -@picked
+      @x += speed
+      @y += -speed
     end
-
-
   end
-
-  def length_squared
-    (@player.x * @player.x) + (@player.y * @player.y)
-  end
-
-  def length
-    Math.sqrt(length_squared)
-  end
-
-  def normalize
-    @vx = @player.x / length
-    @vy = @player.y / length
-  end
-
-  def calculate_slope(p1, p2)
-    @slope_y = (p2.y - p1.y)
-    @slope_x = (p2.x - p1.x)
-  end
-
-  def bounds
-    BoundingBox.new(@x, @y, 48, 48)
-  end
-
 
 end
