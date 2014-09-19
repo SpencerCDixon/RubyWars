@@ -29,8 +29,8 @@ class GameWindow < Gosu::Window
 
     #Enemies + Bullets
     @enemies = []
-    @spawn_rate = 5
-    @spawn_acc = 15
+    @spawn_rate = 5.0
+    @spawn_acc = 15.0
     @bullets = []
 
     # Timer & Counters
@@ -46,18 +46,6 @@ class GameWindow < Gosu::Window
     # Font and Menu
     @large_font = Gosu::Font.new(self, "Arial", SCREEN_HEIGHT / 6)
   end
-
-  def summon_enemies
-    if @counter_spawn >= (@spawn_rate * 60)
-      @enemies << Enemy.new(self, rand(800), rand(600))
-      @counter_spawn = 0
-    end
-    if @counter_rate >= (@spawn_acc * 60)
-      @spawn_rate -= 1 if @spawn_rate > 1
-      @counter_rate = 0
-    end
-  end
-
 
   def draw
     @background.draw
@@ -84,6 +72,17 @@ class GameWindow < Gosu::Window
       summon_enemies
       enemy_collision?
       bullet_collision?
+    end
+  end
+
+  def summon_enemies
+    if @counter_spawn >= (@spawn_rate * 60.0)
+      @enemies << Enemy.new(self, rand(800), rand(600), @player)
+      @counter_spawn = 0
+    end
+    if @counter_rate >= (@spawn_acc * 60.0)
+      @spawn_rate -= 0.7 if @spawn_rate > 0.7
+      @counter_rate = 0
     end
   end
 

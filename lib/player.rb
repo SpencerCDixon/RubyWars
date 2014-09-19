@@ -81,10 +81,14 @@ class Player
   end
 
   def update
-    if move_up then @y += -@bullet_speed end
-    if move_down then @y += @bullet_speed end
-    if move_right then @x += @bullet_speed end
-    if move_left then @x += -@bullet_speed end
+    # unless @y >= 590 || @y <= 10
+      if move_up then @y += -@bullet_speed end
+      if move_down then @y += @bullet_speed end
+    # end
+    # unless @x >= 790 || @x <= 10
+      if move_right then @x += @bullet_speed end
+      if move_left then @x += -@bullet_speed end
+    # end
     @bounding = bounding(@x, @y, 29, 29)
   end
 
