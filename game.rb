@@ -88,7 +88,11 @@ class GameWindow < Gosu::Window
 
   def enemy_collision?
     @enemies.any? do |enemy|
-      @state = :lose if enemy.collide?(@player.x, @player.y)
+      puts "collision check"
+     if enemy.bounds.intersects?(@player.bounds)
+       @state = :lose
+       puts "Lose"
+     end
     end
   end
 

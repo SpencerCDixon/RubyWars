@@ -1,5 +1,4 @@
 class Bullet
-  include BoundingBox
 
   def initialize(window, x, y, x_speed, y_speed, direction)
     @window = window
@@ -12,7 +11,9 @@ class Bullet
 
     @speed = 1
 
-    @bounding = bounding(@x, @y, 64, 64)
+  end
+  def bounds
+    BoundingBox.new(@x, @y, 64, 64)
   end
 
   def draw
@@ -26,7 +27,6 @@ class Bullet
   def update
     @x += 10 * @x_speed
     @y += 10 * @y_speed
-    @bounding = bounding(@x, @y, 64, 64)
   end
 
 end

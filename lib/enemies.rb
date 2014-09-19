@@ -1,5 +1,4 @@
 class Enemy
-  include BoundingBox
 
   attr_reader :x, :y
 
@@ -11,9 +10,10 @@ class Enemy
     @x = x
     @y = y
 
-    @random_movement = (1..5).to_a
+
+    @random_movement = (1..3).to_a
     @picked = @random_movement.sample
-    @bounding = bounding(@x, @y, 48, 48)
+    # @bounding = Bounding.new(@x, @y, 48, 48)
     @bounce = false
 
     @player = player
@@ -24,36 +24,37 @@ class Enemy
   end
 
   def update
-    case
-    when  @x >= 752 || @y >= 552
-      @bounce = true
-    when  @x <= 0 || @y <= 0
-      @bounce = false
-    end
+    @bounce = true if  @x >= 752 || @y >= 552 || @x <= 0 || @y <= 0
 
     if @bounce == true
-      # @picked = @random_movement.sample
-      if @player.x < @x
-        @p1 = @player
-        @p2 = self
-      else
-        @p1 = @player
-        @p2 = self
-      end
-      slope = calculate_slope(@p1, @p2)
 
-       @x += -1
-       @y += -slope
+      # @picked = @random_movement.sample
+      # if @player.x < @x
+      #   @p1 = @player
+      #   @p2 = self
+      # else
+      #   @p1 = selfs
+      #   @p2 = @player
+      # end
+      calculate_slope(@player, self)
+
+       @x += -(@slope_x / 60.0)
+       @y += -(@slope_y / 60.0)
     else
       @x += @picked
       @y += -@picked
     end
 
-    @bounding = bounding(@x, @y, 48, 48)
+
   end
 
   def calculate_slope(p1, p2)
-    slope = (p2.y - p1.y)/(p2.x - p1.x)
+    @slope_y = (p2.y - p1.y)
+    @slope_x = (p2.x - p1.x)
+  end
+
+  def bounds
+    BoundingBox.new(@x, @y, 48, 48)
   end
 
 

@@ -1,9 +1,8 @@
 require "set"
 
 class Player
-  include BoundingBox
   attr_accessor :x, :y, :direction
-  attr_reader :move_up, :move_down, :move_right, :move_left
+  attr_reader :move_up, :move_down, :move_right, :move_left, :bounds
 
   def initialize(window, x, y)
     @player_image = Gosu::Image.new(window, 'img/ruby.jpg')
@@ -19,7 +18,6 @@ class Player
     @move_left = false
     @direction = Set.new([])
 
-    @bounding = bounding(@x, @y, 29, 29)
 
   end
 
@@ -89,7 +87,10 @@ class Player
       if move_right then @x += @bullet_speed end
       if move_left then @x += -@bullet_speed end
     # end
-    @bounding = bounding(@x, @y, 29, 29)
+  end
+
+  def bounds
+    BoundingBox.new(@x, @y, 29, 29)
   end
 
 end
