@@ -1,6 +1,6 @@
 class Enemy
-
-  attr_reader :x, :y
+  SPEED = 4
+  attr_reader :x, :y, :player
 
   def initialize(window, x, y, player)
     @enemy_image = Gosu::Image.new(window, 'img/circle_blue.png')
@@ -28,16 +28,35 @@ class Enemy
 
     if @bounce == true
 
-      calculate_slope(@player, self)
+      dx = (player.x - self.x).to_f
+      dy = (player.y - self.y).to_f
 
-       @x += -(@slope_x / 60.0)
-       @y += -(@slope_y / 60.0)
+      distance = Math.sqrt((dx * dx) + (dy * dy))
+
+      vel_x = (dx / distance) * SPEED
+      vel_y = (dy / distance) * SPEED
+
+      @x += vel_x
+      @y += vel_y
     else
       @x += @picked
       @y += -@picked
     end
 
 
+  end
+
+  def length_squared
+    (@player.x * @player.x) + (@player.y * @player.y)
+  end
+
+  def length
+    Math.sqrt(length_squared)
+  end
+
+  def normalize
+    @vx = @player.x / length
+    @vy = @player.y / length
   end
 
   def calculate_slope(p1, p2)
