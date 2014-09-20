@@ -20,8 +20,6 @@ class Menu
   def draw
     @bg_image.draw(@x, @y, 0)
 
-
-
     music == true ? @music_value = "ON" : @music_value = "OFF"
     sfx == true ? @sfx_value = "ON" : @sfx_value = "OFF"
 
