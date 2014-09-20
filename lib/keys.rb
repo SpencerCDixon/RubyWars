@@ -13,6 +13,12 @@ module Keys
     if id == Gosu::KbD
       @player.move_right = true
     end
+    if id == Gosu::KbSpace
+      if @player.bombs >= 1
+        @player.bombs -= 1
+        @enemies.clear
+      end
+    end
 
     # Bullets
     case

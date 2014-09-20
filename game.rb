@@ -31,15 +31,17 @@ class GameWindow < Gosu::Window
     @player = Player.new(self, 400, 50)
 
     # Power Up
-    @power_ups = [SpeedBoost.new(self, rand(700), rand(500)),
-                  BombBoost.new(self, rand(700), rand(500)),
-                  SpeedBoost.new(self, rand(700), rand(500))]
+    @power_ups = [BombBoost.new(self, rand(100), rand(100)),
+                  BombBoost.new(self, rand(100), rand(100)),
+                  SpeedBoost.new(self, rand(100), rand(100)),
+                  BombBoost.new(self, rand(100), rand(100)),
+                  SpeedBoost.new(self, rand(100), rand(100))]
     @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
 
     #
     @current_boost = []
-    @pwr_up_frequency = 5
-    @pwr_up_spawn_time = 5
+    @pwr_up_frequency = 6 * 60
+    @pwr_up_spawn_time = 5 * 60
     @p_up_counter = 0
 
     # Enemies + Bullets
@@ -74,19 +76,18 @@ class GameWindow < Gosu::Window
       draw_text_centered("Game Over", large_font)
     end
 
-    if @p_up_counter >= (@pwr_up_frequency * 60) && @p_up_counter <= ((@pwr_up_frequency * 60) + (@pwr_up_spawn_time * 60))
-
+    if @p_up_counter >= @pwr_up_frequency && @p_up_counter <= @pwr_up_frequency  + @pwr_up_spawn_time
       @dropped_power_up.draw
-      if @p_up_counter == ((@pwr_up_frequency * 60) + (@pwr_up_spawn_time * 60))
+      if @p_up_counter == @pwr_up_frequency + @pwr_up_spawn_time
         @p_up_counter = 0
         @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
-
       end
     end
 
     # Menu Drawings
     @small_font.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}, #{@spawn_rate.to_i}, E = #{@enemies.size}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
     @small_font.draw("#{@score}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
+    @small_font.draw("Help Requests: #{@player.bombs}", 650, 30, 5, 1.0, 1.0, 0xffffffff)
   end
 
   def update
