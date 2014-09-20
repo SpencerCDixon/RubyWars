@@ -23,7 +23,7 @@ class GameWindow < Gosu::Window
   SCREEN_HEIGHT = 600
 
   include Keys
-  attr_reader :timer, :player
+  attr_reader :timer, :player, :name, :score
   attr_accessor :enemies, :large_font
 
   def initialize

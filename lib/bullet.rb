@@ -7,11 +7,11 @@ class Bullet
     @x_speed = x_speed
     @y_speed = y_speed
     @bullet_speed = bullet_speed
-    @bullet_image = Gosu::Image.new(window, 'img/ruby_shard.png')
+    @bullet_image = Gosu::Image.new(window, 'img/test_bullet2.png')
   end
 
   def bounds
-    BoundingBox.new(@x, @y, 9, 9)
+    BoundingBox.new(@x, @y, 10, 10)
   end
 
   def draw

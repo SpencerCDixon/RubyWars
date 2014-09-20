@@ -4,7 +4,7 @@ class Enemy
   attr_accessor :state
 
   def initialize(window, x, y, player)
-    @enemy_image = Gosu::Image.new(window, 'img/circle_blue.png')
+    @enemy_image = Gosu::Image.new(window, 'img/spider.png')
     @player = player
     @window = window
     @x = x
@@ -16,7 +16,7 @@ class Enemy
   end
 
   def bounds
-    BoundingBox.new(@x, @y, 48, 48)
+    BoundingBox.new(@x, @y, 50, 42)
   end
 
   def draw

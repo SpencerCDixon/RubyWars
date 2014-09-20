@@ -12,6 +12,7 @@ class Menu
 
     # Fonts
     @menu_font = Gosu::Font.new(@window, "Futura", 600 / 15)
+    @control_font = Gosu::Font.new(@window, "Futura", 600 / 30)
 
     # Logic
     @selection = 1
@@ -22,11 +23,13 @@ class Menu
     @bg_image.draw(@x, @y, 0)
     @title.draw(150, 100, 0)
 
+    # Toggle Music/SFX
     music == true ? @music_value = "ON" : @music_value = "OFF"
     sfx == true ? @sfx_value = "ON" : @sfx_value = "OFF"
 
-    scolor, mcolor, fcolor = 0xffc0c0c0, 0xffc0c0c0, 0xffc0c0c0
-    hcolor = 0xffffd700
+    # Menu Controls
+    scolor, mcolor, fcolor = 0xffffffff, 0xffffffff, 0xffffffff
+    hcolor = Gosu::Color::RED
 
     scolor = hcolor if @selection == 1
     draw_text_centered("Play Game", @menu_font, 75, scolor)
@@ -34,8 +37,21 @@ class Menu
     draw_text_centered("Music: #{@music_value} ", @menu_font, 120, mcolor)
     fcolor = hcolor if @selection == 3
     draw_text_centered("SFX: #{@sfx_value} ", @menu_font, 165, fcolor)
+    draw_text(620, 5, "Playing As: #{@window.name}", @control_font, 0xffffd700)
 
-    # @menu_font.draw("SFX: #{@sfx_value}", 300, 450, 3, 1, 1, fcolor)
+    # Player Controls
+    draw_text(15, 465, "Controls:", @control_font, 0xffffffff)
+    draw_text(15, 485, "R - Reset at gameover", @control_font, 0xffffffff)
+    draw_text(15, 505, "A/W/S/D - Move Player", @control_font, 0xffffffff)
+    draw_text(15, 525, "J/I/K/L - Shoot", @control_font, 0xffffffff)
+    draw_text(15, 545, "Spacebar - Use Help Request", @control_font, 0xffffffff)
+    draw_text(15, 565, "P - Activate Pry", @control_font, 0xffffffff)
+
+    # Credits
+    draw_text(595, 545, "Created by Spencer Dixon ", @control_font, 0xffffffff )
+    draw_text(595, 565, "github.com/SpencerCDixon", @control_font, 0xffffffff )
+
+
 
   end
 
