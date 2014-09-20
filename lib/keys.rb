@@ -57,6 +57,19 @@ module Keys
         @bullets << @player.fire(:right)
       end
     end
+
+    # Menu
+    if id == Gosu::KbUp
+      @menu.selection -= 1
+      if @menu.selection < 1
+        @menu.selection = 3
+      end
+    elsif id == Gosu::KbDown
+      @menu.selection += 1
+      if @menu.selection > 3
+        @menu.selection = 1
+      end
+    end
   end
 
   def button_up(id)

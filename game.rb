@@ -12,6 +12,7 @@ require_relative 'lib/timer'
 require_relative 'lib/power_ups/speed'
 require_relative 'lib/power_ups/bombs'
 require_relative 'lib/power_ups/binding_pry'
+require_relative 'menu'
 
 
 
@@ -35,7 +36,7 @@ class GameWindow < Gosu::Window
     @power_ups = summon_power_ups
     @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
     @current_boost = []
-    @pwr_up_frequency = 5 * 60
+    @pwr_up_frequency = 5  * 60
     @pwr_up_spawn_time = 5 * 60
     @p_up_counter = 0
 
@@ -56,50 +57,62 @@ class GameWindow < Gosu::Window
     @state = :menu
 
     # Font and Menu
+    @menu = Menu.new(self, 0, 0)
     @large_font = Gosu::Font.new(self, "Arial", SCREEN_HEIGHT / 6)
     @small_font = Gosu::Font.new(self, "helvetica", 20)
   end
 
   def draw
-    @background.draw
-    @player.draw
-    @enemies.each {|e| e.draw} if !@enemies.empty?
-    @bullets.each {|b| b.draw} if !@bullets.empty?
-    @p_up_counter += 1
+    @menu.draw
 
-    if @state == :lose
-      draw_text_centered("Game Over", large_font)
-    end
 
-    if @p_up_counter >= @pwr_up_frequency && @p_up_counter <= @pwr_up_frequency  + @pwr_up_spawn_time
-      @dropped_power_up.draw
-      if @p_up_counter == @pwr_up_frequency + @pwr_up_spawn_time
-        @p_up_counter = 0
-        @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
+    if @state != :menu
+      @background.draw
+      @player.draw
+      @enemies.each {|e| e.draw} if !@enemies.empty?
+      @bullets.each {|b| b.draw} if !@bullets.empty?
+      @p_up_counter += 1
+
+      if @state == :lose
+        draw_text_centered("Game Over", large_font)
       end
+
+      if @p_up_counter >= @pwr_up_frequency && @p_up_counter <= @pwr_up_frequency  + @pwr_up_spawn_time
+        @dropped_power_up.draw
+        if @p_up_counter == @pwr_up_frequency + @pwr_up_spawn_time
+          @p_up_counter = 0
+          @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
+        end
+      end
+
+      # Game Stats Drawings
+      @small_font.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}, #{@spawn_rate.to_i}, E = #{@enemies.size}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
+      @small_font.draw("#{@score}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
+      @small_font.draw("Help Requests: #{@player.bombs}", 650, 30, 5, 1.0, 1.0, 0xffffffff)
+      @small_font.draw("binding.pry: #{@player.binding_pry}", 650, 60, 5, 1.0, 1.0, 0xffffffff)
     end
 
-    # Menu Drawings
-    @small_font.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}, #{@spawn_rate.to_i}, E = #{@enemies.size}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
-    @small_font.draw("#{@score}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
-    @small_font.draw("Help Requests: #{@player.bombs}", 650, 30, 5, 1.0, 1.0, 0xffffffff)
-    @small_font.draw("binding.pry: #{@player.binding_pry}", 650, 60, 5, 1.0, 1.0, 0xffffffff)
+
   end
 
   def update
-    unless @state == :lose
-      @counter_spawn += 1
-      @counter_rate += 1
-      @player.update
-      @timer.update
-      @enemies.each {|e| e.update}
-      @bullets.each {|b| b.update} if !@bullets.empty?
 
-      summon_enemies
-      enemy_collision?
-      bullet_collision?
-      power_up_boost? if !@dropped_power_up.nil?
+    if @state != :menu
+      unless @state == :lose
+        @counter_spawn += 1
+        @counter_rate += 1
+        @player.update
+        @timer.update
+        @enemies.each {|e| e.update}
+        @bullets.each {|b| b.update} if !@bullets.empty?
+
+        summon_enemies
+        enemy_collision?
+        bullet_collision?
+        power_up_boost? if !@dropped_power_up.nil?
+      end
     end
+
   end
 
   def summon_enemies
