@@ -22,7 +22,6 @@ class GameWindow < Gosu::Window
   SCREEN_WIDTH = 800
   SCREEN_HEIGHT = 600
 
-
   include Keys
   attr_reader :timer, :player
   attr_accessor :enemies, :large_font
@@ -36,7 +35,7 @@ class GameWindow < Gosu::Window
     @power_ups = summon_power_ups
     @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
     @current_boost = []
-    @pwr_up_frequency = 5  * 60
+    @pwr_up_frequency = 25  * 60
     @pwr_up_spawn_time = 5 * 60
     @p_up_counter = 0
 
@@ -46,59 +45,84 @@ class GameWindow < Gosu::Window
     @enemies = []
     @bullets = []
 
-    # Timer & Counters
-    @timer = Timer.new
-    @counter_spawn = 0
-    @counter_rate = 0
-
     # Game & Player Mechanics
     @name = NAME
     @score = 0
     @state = :menu
 
+    # Timer & Counters
+    @timer = Timer.new
+    @counter_spawn = 0
+    @counter_rate = 0
+
     # Font and Menu
-    @menu = Menu.new(self, 0, 0)
-    @large_font = Gosu::Font.new(self, "Arial", SCREEN_HEIGHT / 6)
-    @small_font = Gosu::Font.new(self, "helvetica", 20)
+    @music = true
+    @sfx = true
+    @menu = Menu.new(self, 0, 0, @music, @sfx)
+    @large_font = Gosu::Font.new(self, "Futura", SCREEN_HEIGHT / 10)
+    @medium_font = Gosu::Font.new(self, "Futura", SCREEN_HEIGHT / 22)
+    @small_font = Gosu::Font.new(self, "Futura", SCREEN_HEIGHT / 30)
+    @game_end = nil
   end
 
-  def draw
-    @menu.draw
 
+
+  def draw
+    @menu.draw if @state == :menu
 
     if @state != :menu
-      @background.draw
-      @player.draw
-      @enemies.each {|e| e.draw} if !@enemies.empty?
-      @bullets.each {|b| b.draw} if !@bullets.empty?
-      @p_up_counter += 1
+      if @state == :running
+        @background.draw
+        @player.draw
+        @enemies.each {|e| e.draw} if !@enemies.empty?
+        @bullets.each {|b| b.draw} if !@bullets.empty?
+        @p_up_counter += 1
 
+        # Drop Power Ups
+        if @p_up_counter >= @pwr_up_frequency && @p_up_counter <= @pwr_up_frequency  + @pwr_up_spawn_time
+          @dropped_power_up.draw
+          if @p_up_counter == @pwr_up_frequency + @pwr_up_spawn_time
+            @p_up_counter = 0
+            @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
+          end
+        end
+
+        # Game Stats Drawings
+
+        # @small_font.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
+        # @small_font.draw("#{@score}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
+        draw_text(360, 10,"#{@score}", @medium_font, 0xffffffff)
+
+        draw_text(650, 7,"Help Requests x ", @small_font, 0xffffffff)
+        draw_text(770, 7,"#{@player.bombs}", @small_font, Gosu::Color::RED)
+
+        draw_text(650, 24,"Binding Prys   x ", @small_font, 0xffffffff)
+        draw_text(770, 24,"#{@player.binding_pry}", @small_font, Gosu::Color::RED)
+      end
+
+      # Post score online and reset game after 5 seconds
       if @state == :lose
         draw_text_centered("Game Over", large_font)
-      end
-
-      if @p_up_counter >= @pwr_up_frequency && @p_up_counter <= @pwr_up_frequency  + @pwr_up_spawn_time
-        @dropped_power_up.draw
-        if @p_up_counter == @pwr_up_frequency + @pwr_up_spawn_time
-          @p_up_counter = 0
-          @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
+        @background.draw
+        if @game_end == nil
+          @game_end = Timer.new
+        end
+        @game_end.update
+        if @game_end.seconds >= 5
+          reset(:menu)
         end
       end
-
-      # Game Stats Drawings
-      @small_font.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}, #{@spawn_rate.to_i}, E = #{@enemies.size}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
-      @small_font.draw("#{@score}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
-      @small_font.draw("Help Requests: #{@player.bombs}", 650, 30, 5, 1.0, 1.0, 0xffffffff)
-      @small_font.draw("binding.pry: #{@player.binding_pry}", 650, 60, 5, 1.0, 1.0, 0xffffffff)
     end
-
-
   end
 
   def update
+    menu_action = @menu.update
+    if menu_action == "start"
+      @state = :running
+      menu_action = nil
+    end
 
-    if @state != :menu
-      unless @state == :lose
+    if @state == :running
         @counter_spawn += 1
         @counter_rate += 1
         @player.update
@@ -110,9 +134,11 @@ class GameWindow < Gosu::Window
         enemy_collision?
         bullet_collision?
         power_up_boost? if !@dropped_power_up.nil?
-      end
     end
 
+    if @state == :lose
+      @enemies.each {|e| e.state == :pause}
+    end
   end
 
   def summon_enemies
@@ -214,6 +240,19 @@ class GameWindow < Gosu::Window
 
   def draw_text(x, y, text, font, color)
     font.draw(text, x, y, 3, 1, 1, color)
+  end
+
+  def reset(state)
+    @menu = Menu.new(self, 0, 0, @music, @sfx)
+    @player = Player.new(self, 400, 50)
+    @timer = Timer.new
+    @power_ups = summon_power_ups
+    @enemies = []
+    @bullets = []
+    @current_boost = []
+    @score = 0
+    @state = state
+    @game_end = nil
   end
 
 
