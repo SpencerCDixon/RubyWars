@@ -13,15 +13,15 @@ class Background
 
   def draw
     case
-    when @window.score >= 10000
+    when @window.score >= 100_000
       @bg_image6.draw(@x, @y, 0)
-    when @window.score >= 9000
+    when @window.score >= 80_000
       @bg_image5.draw(@x, @y, 0)
-    when @window.score >= 8000
+    when @window.score >= 40_000
       @bg_image4.draw(@x, @y, 0)
-    when @window.score >= 7000
+    when @window.score >= 20_000
       @bg_image3.draw(@x, @y, 0)
-    when @window.score >= 6000
+    when @window.score >= 10_000
       @bg_image2.draw(@x, @y, 0)
     else
       @bg_image1.draw(@x, @y, 0)

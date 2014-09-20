@@ -65,8 +65,6 @@ class GameWindow < Gosu::Window
     @game_end = nil
   end
 
-
-
   def draw
     @menu.draw if @state == :menu
 
