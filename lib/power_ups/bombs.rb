@@ -9,7 +9,7 @@ class BombBoost
   end
 
   def bounds
-    BoundingBox.new(@x, @y, 100, 100)
+    BoundingBox.new(@x, @y, 40, 40)
   end
 
   def draw

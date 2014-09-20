@@ -3,7 +3,7 @@ class Player
   attr_reader :bounds
 
   def initialize(window, x, y)
-    @player_image = Gosu::Image.new(window, 'img/ruby_small.png')
+    @player_image = Gosu::Image.new(window, 'img/player_small.png')
     @window = window
     @x = x
     @y = y
@@ -21,7 +21,7 @@ class Player
   end
 
   def bounds
-    BoundingBox.new(@x, @y, 50, 50)
+    BoundingBox.new(@x, @y, 44, 37)
   end
 
   def draw
