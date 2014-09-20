@@ -11,6 +11,7 @@ require_relative 'lib/bullet'
 require_relative 'lib/timer'
 require_relative 'lib/power_ups/speed'
 require_relative 'lib/power_ups/bombs'
+require_relative 'lib/power_ups/binding_pry'
 
 
 
@@ -31,7 +32,8 @@ class GameWindow < Gosu::Window
     @player = Player.new(self, 400, 50)
 
     # Power Up
-    @power_ups = [BombBoost.new(self, rand(100), rand(100)),
+    @power_ups = [PryBoost.new(self, rand(100), rand(100)),
+                  BombBoost.new(self, rand(100), rand(100)),
                   BombBoost.new(self, rand(100), rand(100)),
                   SpeedBoost.new(self, rand(100), rand(100)),
                   BombBoost.new(self, rand(100), rand(100)),
@@ -88,6 +90,7 @@ class GameWindow < Gosu::Window
     @small_font.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}, #{@spawn_rate.to_i}, E = #{@enemies.size}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
     @small_font.draw("#{@score}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
     @small_font.draw("Help Requests: #{@player.bombs}", 650, 30, 5, 1.0, 1.0, 0xffffffff)
+    @small_font.draw("binding.pry: #{@player.binding_pry}", 650, 60, 5, 1.0, 1.0, 0xffffffff)
   end
 
   def update
@@ -185,7 +188,6 @@ class GameWindow < Gosu::Window
     x = (SCREEN_WIDTH - font.text_width(text)) / 2
     y = (SCREEN_HEIGHT - font.height) / 2
     color = Gosu::Color::RED
-
     draw_text(x, y, text, font, color)
   end
 

@@ -19,6 +19,16 @@ module Keys
         @enemies.clear
       end
     end
+    if id == Gosu::KbP
+      if @player.binding_pry >= 1
+        @player.binding_pry -= 1
+        if @timer.seconds < (@timer.seconds + 3)
+          @enemies.each {|e| e.state = :pause}
+        else
+          @enemies.each {|e| e.state = :attack}
+        end
+      end
+    end
 
     # Bullets
     case

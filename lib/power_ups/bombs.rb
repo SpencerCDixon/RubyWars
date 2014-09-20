@@ -1,5 +1,4 @@
 class BombBoost
-attr_reader :name
   def initialize(window, x, y)
     @window = window
     @x = x
@@ -7,7 +6,6 @@ attr_reader :name
     @state = :unused
     @ee_image = ["eric", "adam", "helen", "richard", "faizaan"].sample
     @bomb_image = Gosu::Image.new(window, "img/#{@ee_image}.png")
-    @name = "Bomb boost"
   end
 
   def bounds
