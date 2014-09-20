@@ -1,11 +1,12 @@
 class Bullet
 
-  def initialize(window, x, y, x_speed, y_speed)
+  def initialize(window, x, y, x_speed, y_speed, bullet_speed)
     @window = window
     @x = x
     @y = y
     @x_speed = x_speed
     @y_speed = y_speed
+    @bullet_speed = bullet_speed
     @bullet_image = Gosu::Image.new(window, 'img/ruby_shard.png')
   end
 
@@ -18,8 +19,8 @@ class Bullet
   end
 
   def update
-    @x += 10 * @x_speed
-    @y += 10 * @y_speed
+    @x += @bullet_speed * @x_speed
+    @y += @bullet_speed * @y_speed
   end
 
 end

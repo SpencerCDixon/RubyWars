@@ -33,13 +33,29 @@ module Keys
     # Bullets
     case
     when id == Gosu::KbI
-      @bullets << @player.fire(:up)
+      if @player.bullet_speed_boost > 0
+        @bullets << @player.fire(:up, @player.bullet_speed_boost)
+      else
+         @bullets << @player.fire(:up)
+      end
     when id == Gosu::KbK
-      @bullets << @player.fire(:down)
+      if @player.bullet_speed_boost > 0
+        @bullets << @player.fire(:down, @player.bullet_speed_boost)
+      else
+        @bullets << @player.fire(:down)
+      end
     when id == Gosu::KbL
-      @bullets << @player.fire(:left)
+      if @player.bullet_speed_boost > 0
+         @bullets << @player.fire(:left, @player.bullet_speed_boost)
+      else
+        @bullets << @player.fire(:left)
+      end
     when id == Gosu::KbJ
-      @bullets << @player.fire(:right)
+      if @player.bullet_speed_boost > 0
+        @bullets << @player.fire(:right, @player.bullet_speed_boost)
+      else
+        @bullets << @player.fire(:right)
+      end
     end
   end
 

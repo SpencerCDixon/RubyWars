@@ -32,17 +32,10 @@ class GameWindow < Gosu::Window
     @player = Player.new(self, 400, 50)
 
     # Power Up
-    @power_ups = [PryBoost.new(self, rand(100), rand(100)),
-                  BombBoost.new(self, rand(100), rand(100)),
-                  BombBoost.new(self, rand(100), rand(100)),
-                  SpeedBoost.new(self, rand(100), rand(100)),
-                  BombBoost.new(self, rand(100), rand(100)),
-                  SpeedBoost.new(self, rand(100), rand(100))]
+    @power_ups = summon_power_ups
     @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
-
-    #
     @current_boost = []
-    @pwr_up_frequency = 6 * 60
+    @pwr_up_frequency = 5 * 60
     @pwr_up_spawn_time = 5 * 60
     @p_up_counter = 0
 
@@ -154,6 +147,21 @@ class GameWindow < Gosu::Window
         @counter_rate = 0
       end
     end
+  end
+
+  def summon_power_ups
+    power_ups = []
+    5.times do
+      power_ups << SpeedBoost.new(self, rand(700), rand(500))
+    end
+    10.times do
+      power_ups << PryBoost.new(self, rand(700), rand(500))
+    end
+    10.times do
+      power_ups << BombBoost.new(self, rand(700), rand(500))
+    end
+    power_ups.shuffle!
+    return power_ups
   end
 
   def enemy_collision?

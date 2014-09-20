@@ -1,5 +1,5 @@
 class Player
-  attr_accessor :x, :y, :move_up, :move_down, :move_right, :move_left, :player_speed, :bombs, :binding_pry
+  attr_accessor :x, :y, :move_up, :move_down, :move_right, :move_left, :player_speed, :bombs, :binding_pry, :bullet_speed_boost
   attr_reader :bounds
 
   def initialize(window, x, y)
@@ -9,6 +9,7 @@ class Player
     @y = y
     @bombs = 0
     @binding_pry = 0
+    @bullet_speed_boost = 0
 
     @player_speed = 7
 
@@ -27,7 +28,7 @@ class Player
     @player_image.draw(@x, @y, 1)
   end
 
-  def fire(direction)
+  def fire(direction, speed_boost = 0)
     x_speed = 0.0
     y_speed = 0.0
 
@@ -36,7 +37,8 @@ class Player
     y_speed += 1.0 if direction == :down
     y_speed -= 1.0 if direction == :up
 
-    Bullet.new(@window, x, y, x_speed, y_speed)
+    bullet_speed = 10 + speed_boost
+    Bullet.new(@window, x, y, x_speed, y_speed, bullet_speed)
   end
 
   def update

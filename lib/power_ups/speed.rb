@@ -19,7 +19,7 @@ class SpeedBoost
   end
 
   def boost(player)
-    player.player_speed += 2
+    player.bullet_speed_boost += 2
     use
   end
 
