@@ -10,6 +10,8 @@ require_relative 'lib/background'
 require_relative 'lib/bullet'
 require_relative 'lib/timer'
 require_relative 'lib/power_ups/speed'
+require_relative 'lib/power_ups/bombs'
+
 
 
 NAME = ARGV[0] || "Anonymous"
@@ -17,8 +19,7 @@ NAME = ARGV[0] || "Anonymous"
 class GameWindow < Gosu::Window
   SCREEN_WIDTH = 800
   SCREEN_HEIGHT = 600
-  POWER_UP_FREQUENCY = 3
-  POWER_UP_LENGTH = 10
+
 
   include Keys
   attr_reader :timer, :player
@@ -28,8 +29,18 @@ class GameWindow < Gosu::Window
     super(SCREEN_WIDTH, SCREEN_HEIGHT, false)
     @background = Background.new(self, 0, 0)
     @player = Player.new(self, 400, 50)
-    @power_ups = [SpeedBoost.new(self, rand(800), rand(600))]
+
+    # Power Up
+    @power_ups = [SpeedBoost.new(self, rand(700), rand(500)),
+                  BombBoost.new(self, rand(700), rand(500)),
+                  SpeedBoost.new(self, rand(700), rand(500))]
+    @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
+
+    #
     @current_boost = []
+    @pwr_up_frequency = 5
+    @pwr_up_spawn_time = 5
+    @p_up_counter = 0
 
     # Enemies + Bullets
     @spawn_rate = 5.0
@@ -54,22 +65,28 @@ class GameWindow < Gosu::Window
 
   def draw
     @background.draw
-
     @player.draw
     @enemies.each {|e| e.draw} if !@enemies.empty?
-    @small_font.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}, #{@spawn_rate}, E = #{@enemies.size}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
-    @small_font.draw("#{@score}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
     @bullets.each {|b| b.draw} if !@bullets.empty?
+    @p_up_counter += 1
 
     if @state == :lose
       draw_text_centered("Game Over", large_font)
     end
 
-    if timer.seconds >= POWER_UP_FREQUENCY && timer.seconds <= (POWER_UP_FREQUENCY + POWER_UP_LENGTH)
-      @dropped_power_up = @power_ups.first
+    if @p_up_counter >= (@pwr_up_frequency * 60) && @p_up_counter <= ((@pwr_up_frequency * 60) + (@pwr_up_spawn_time * 60))
+
       @dropped_power_up.draw
+      if @p_up_counter == ((@pwr_up_frequency * 60) + (@pwr_up_spawn_time * 60))
+        @p_up_counter = 0
+        @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
+
+      end
     end
-    power_up_draw? if !@dropped_power_up.nil?
+
+    # Menu Drawings
+    @small_font.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}, #{@spawn_rate.to_i}, E = #{@enemies.size}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
+    @small_font.draw("#{@score}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
   end
 
   def update
@@ -89,13 +106,49 @@ class GameWindow < Gosu::Window
   end
 
   def summon_enemies
-    if @counter_spawn >= (@spawn_rate * 60.0)
-      @enemies << Enemy.new(self, rand(200), rand(200), @player)
-      @counter_spawn = 0
-    end
-    if @counter_rate >= (@spawn_acc * 60.0)
-      @spawn_rate -= 0.7 if @spawn_rate > 0.7
-      @counter_rate = 0
+    case
+    when timer.minutes >= 4
+      if @counter_spawn >= (@spawn_rate * 60.0)
+        @enemies << Enemy.new(self, rand(100), (rand(100) + 500), @player)
+        @enemies << Enemy.new(self, (rand(100) + 700), rand(100), @player)
+        @enemies << Enemy.new(self, (rand(100) + 700), (rand(100) + 500), @player)
+        @enemies << Enemy.new(self, rand(100), rand(100), @player)
+        @counter_spawn = 0
+      end
+      if @counter_rate >= (@spawn_acc * 60.0)
+        @spawn_rate -= 0.4 if @spawn_rate > 0.7
+        @counter_rate = 0
+      end
+    when timer.minutes >= 2
+      if @counter_spawn >= (@spawn_rate * 60.0)
+        @enemies << Enemy.new(self, (rand(100) + 700), rand(100), @player)
+        @enemies << Enemy.new(self, (rand(100) + 700), (rand(100) + 500), @player)
+        @enemies << Enemy.new(self, rand(100), rand(100), @player)
+        @counter_spawn = 0
+      end
+      if @counter_rate >= (@spawn_acc * 60.0)
+        @spawn_rate -= 0.4 if @spawn_rate > 0.7
+        @counter_rate = 0
+      end
+    when timer.minutes >= 1
+      if @counter_spawn >= (@spawn_rate * 60.0)
+        @enemies << Enemy.new(self, (rand(100) + 700), rand(100), @player)
+        @enemies << Enemy.new(self, rand(100), rand(100), @player)
+        @counter_spawn = 0
+      end
+      if @counter_rate >= (@spawn_acc * 60.0)
+        @spawn_rate -= 0.4 if @spawn_rate > 0.7
+        @counter_rate = 0
+      end
+    when timer.seconds >= 0
+      if @counter_spawn >= (@spawn_rate * 60.0)
+        @enemies << Enemy.new(self, rand(100), rand(100), @player)
+        @counter_spawn = 0
+      end
+      if @counter_rate >= (@spawn_acc * 60.0)
+        @spawn_rate -= 0.4 if @spawn_rate > 0.7
+        @counter_rate = 0
+      end
     end
   end
 
@@ -120,18 +173,9 @@ class GameWindow < Gosu::Window
     end
   end
 
-  def power_up_draw?
-    if @dropped_power_up.bounds.intersects?(@player.bounds)
-      puts "Power up!"
-      @small_font.draw("gem install rails...", 300, 300, 5, 1.0, 1.0, 0xffffffff)
-    end
-  end
-
   def power_up_boost?
-    if @dropped_power_up.bounds.intersects?(@player.bounds)
-      @current_boost << @dropped_power_up
-      @current_boost.first.boost
-      @current_boost.delete(@dropped_power_up)
+    if @dropped_power_up.bounds.intersects?(@player.bounds) && @dropped_power_up.unused?
+      @dropped_power_up.boost(@player)
     end
   end
 

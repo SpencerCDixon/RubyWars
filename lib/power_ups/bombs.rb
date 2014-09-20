@@ -1,27 +1,27 @@
-class SpeedBoost
+class BombBoost
 attr_reader :name
   def initialize(window, x, y)
     @window = window
     @x = x
     @y = y
     @state = :unused
-    @name = "speed boost"
-
-    @speed_boost_image = Gosu::Image.new(window, 'img/rails.jpg')
+    @ee_image = ["eric", "adam", "helen", "richard", "faizaan"].sample
+    @bomb_image = Gosu::Image.new(window, "img/#{@ee_image}.png")
+    @name = "Bomb boost"
   end
 
   def bounds
-    BoundingBox.new(@x, @y, 64, 64)
+    BoundingBox.new(@x, @y, 100, 100)
   end
 
   def draw
     if unused?
-      @speed_boost_image.draw(@x, @y, 0)
+      @bomb_image.draw(@x, @y, 0)
     end
   end
 
   def boost(player)
-    player.player_speed += 2
+    player.bombs += 1
     use
   end
 
