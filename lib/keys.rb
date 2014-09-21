@@ -76,7 +76,6 @@ module Keys
     elsif id == Gosu::KbReturn
       if @menu.selection == 1
         @menu.menu_action = "start"
-        @background.theme.play
       elsif @menu.selection == 2
         @menu.menu_action = "mtoggle"
       elsif @menu.selection == 3

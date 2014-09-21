@@ -27,3 +27,9 @@ Philisophy, make bad guys the challenge not the controls. Make UX as easy as pos
 - Sinatra hat safety upgrade
 - Lazer bullets for a give amount of time.
 - Flamethrower
+
+
+Refactoring:
+- Create a music player class that abstracts out music/sfx from all other classes
+- Add more enemy types/make enemies have inheritable traits so it's easier to make more kinds
+- Add particles to bullets/player moving

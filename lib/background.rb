@@ -1,5 +1,5 @@
 class Background
-  attr_reader :theme
+  attr_reader :theme, :menu_music
   def initialize(window, x, y)
     @window = window
     @y = y
@@ -12,6 +12,7 @@ class Background
     @bg_image6 = Gosu::Image.new(window, 'img/backgrounds/bg6.png')
 
     @theme = Gosu::Song.new(window, 'music/Awake.mp3')
+    @menu_music = Gosu::Song.new(window, 'music/menu.mp3')
   end
 
   def draw

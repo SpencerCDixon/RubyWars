@@ -110,8 +110,12 @@ class GameWindow < Gosu::Window
 
   def update
     menu_action = @menu.update
+    @background.menu_music.play if @state == :menu
+
 
     if menu_action == "start"
+      @background.menu_music.pause
+      @background.theme.play
       @state = :running
     elsif menu_action == "mtoggle"
       @music == true ? @music = false : @music = true
