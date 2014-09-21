@@ -1,6 +1,8 @@
 # Ruby Wars V1
 require 'gosu'
 require 'pry'
+require 'uri'
+require 'net/http'
 
 require_relative 'lib/bounding_box'
 require_relative 'lib/player'
@@ -26,8 +28,11 @@ class GameWindow < Gosu::Window
 
   def initialize
     super(SCREEN_WIDTH, SCREEN_HEIGHT, false)
+    self.caption = "Ruby Wars"
     @background = Background.new(self, 0, 0)
     @player = Player.new(self, 400, 50)
+    @uri = URI('http://localhost:4567')
+
 
     # Power Up
     @power_ups = summon_power_ups
@@ -90,7 +95,6 @@ class GameWindow < Gosu::Window
         draw_text(650, 24,"Binding Prys   x ", @small_font, 0xffffffff)
         draw_text(770, 24,"#{@player.binding_pry}", @small_font, Gosu::Color::RED)
         draw_text(770, 54,"#{@timer.seconds}", @small_font, Gosu::Color::BLUE)
-
       end
 
       # Post score online and reset game after 5 seconds
@@ -98,6 +102,7 @@ class GameWindow < Gosu::Window
         draw_text_centered("Game Over", large_font)
         @background.draw
         if @game_end == nil
+          post_score
           @game_end = Timer.new
         end
         @game_end.update
@@ -263,6 +268,10 @@ class GameWindow < Gosu::Window
 
   def draw_text(x, y, text, font, color)
     font.draw(text, x, y, 3, 1, 1, color)
+  end
+
+  def post_score
+    Net::HTTP.post_form(@uri, 'name' => @name, 'score' => @score)
   end
 
   def reset(state)
