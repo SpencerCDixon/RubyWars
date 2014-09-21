@@ -1,4 +1,5 @@
 class Background
+  attr_reader :theme
   def initialize(window, x, y)
     @window = window
     @y = y
@@ -31,6 +32,10 @@ class Background
   end
 
   def update
-    @music == true ? @theme.play : @theme.pause
+    # if @window.music == true
+    #   @theme.play
+    # else
+    #   @theme.pause
+    # end
   end
 end

@@ -1,18 +1,19 @@
 class Menu
-  attr_accessor :selection, :music, :sfx, :menu_action
+  attr_accessor :selection, :music, :sfx, :menu_action, :select_sound
 
   def initialize(window, x, y, music, sfx)
     @window = window
     @y = y
     @x = x
-    @bg_image = Gosu::Image.new(window, 'img/menu/menu_background.png')
-    @title = Gosu::Image.new(window, 'img/title.png')
     @music = music
     @sfx = sfx
 
-    # Fonts
+    # Assets
     @menu_font = Gosu::Font.new(@window, "Futura", 600 / 15)
     @control_font = Gosu::Font.new(@window, "Futura", 600 / 30)
+    @select_sound = Gosu::Sample.new(@window, 'music/menuselect.ogg')
+    @bg_image = Gosu::Image.new(window, 'img/menu/menu_background.png')
+    @title = Gosu::Image.new(window, 'img/title.png')
 
     # Logic
     @selection = 1
@@ -24,8 +25,8 @@ class Menu
     @title.draw(150, 100, 0)
 
     # Toggle Music/SFX
-    music == true ? @music_value = "ON" : @music_value = "OFF"
-    sfx == true ? @sfx_value = "ON" : @sfx_value = "OFF"
+    @window.music == true ? @music_value = "ON" : @music_value = "OFF"
+    @window.sfx == true ? @sfx_value = "ON" : @sfx_value = "OFF"
 
     # Menu Controls
     scolor, mcolor, fcolor = 0xffffffff, 0xffffffff, 0xffffffff
@@ -50,9 +51,6 @@ class Menu
     # Credits
     draw_text(595, 545, "Created by Spencer Dixon ", @control_font, 0xffffffff )
     draw_text(595, 565, "github.com/SpencerCDixon", @control_font, 0xffffffff )
-
-
-
   end
 
   def update

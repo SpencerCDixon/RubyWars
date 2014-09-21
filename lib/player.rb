@@ -18,6 +18,7 @@ class Player
     @move_right = false
     @move_left = false
 
+    @shooting = Gosu::Sample.new(window, 'music/Shooting1 2.m4a')
   end
 
   def bounds
@@ -38,6 +39,7 @@ class Player
     y_speed -= 1.0 if direction == :up
 
     bullet_speed = 10 + speed_boost
+    @shooting.play(0.1) if @window.sfx
     Bullet.new(@window, x, y, x_speed, y_speed, bullet_speed)
   end
 

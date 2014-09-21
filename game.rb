@@ -14,8 +14,6 @@ require_relative 'lib/power_ups/bombs'
 require_relative 'lib/power_ups/binding_pry'
 require_relative 'menu'
 
-
-
 NAME = ARGV[0] || "Anonymous"
 
 class GameWindow < Gosu::Window
@@ -23,7 +21,7 @@ class GameWindow < Gosu::Window
   SCREEN_HEIGHT = 600
 
   include Keys
-  attr_reader :timer, :player, :name, :score
+  attr_reader :timer, :player, :name, :score, :music, :sfx
   attr_accessor :enemies, :large_font
 
   def initialize
@@ -40,7 +38,7 @@ class GameWindow < Gosu::Window
     @p_up_counter = 0
 
     # Enemies + Bullets
-    @spawn_rate = 5.0
+    @spawn_rate = 4.0
     @spawn_acc = 15.0
     @enemies = []
     @bullets = []
@@ -93,6 +91,8 @@ class GameWindow < Gosu::Window
 
         draw_text(650, 24,"Binding Prys   x ", @small_font, 0xffffffff)
         draw_text(770, 24,"#{@player.binding_pry}", @small_font, Gosu::Color::RED)
+        draw_text(770, 54,"#{@timer.seconds}", @small_font, Gosu::Color::BLUE)
+
       end
 
       # Post score online and reset game after 5 seconds
@@ -112,11 +112,15 @@ class GameWindow < Gosu::Window
 
   def update
     menu_action = @menu.update
-    @background.update
+
     if menu_action == "start"
       @state = :running
-      menu_action = nil
+    elsif menu_action == "mtoggle"
+      @music == true ? @music = false : @music = true
+    elsif menu_action == "sfxtoggle"
+      @sfx == true ? @sfx = false : @sfx = true
     end
+    @menu.menu_action = nil
 
     if @state == :running
         @counter_spawn += 1

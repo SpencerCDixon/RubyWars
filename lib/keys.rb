@@ -62,25 +62,24 @@ module Keys
     # Menu
     if id == Gosu::KbUp
       @menu.selection -= 1
+      @menu.select_sound.play(0.4) if @sfx == true
       if @menu.selection < 1
         @menu.selection = 3
       end
     elsif id == Gosu::KbDown
       @menu.selection += 1
+      @menu.select_sound.play(0.4) if @sfx == true
       if @menu.selection > 3
         @menu.selection = 1
       end
     elsif id == Gosu::KbReturn
       if @menu.selection == 1
         @menu.menu_action = "start"
-        # @music_vol = false
-        # if @sfx_vol == true
-        #   @enter_sound.play(0.5)
-        # end
-      # elsif @menu.selection == 2
-      #   @menu_action = "mtoggle"
-      # elsif @menu.selection == 3
-      #   @menu_action = "sfxtoggle"
+        @background.theme.play
+      elsif @menu.selection == 2
+        @menu.menu_action = "mtoggle"
+      elsif @menu.selection == 3
+        @menu.menu_action = "sfxtoggle"
       end
     end
 
