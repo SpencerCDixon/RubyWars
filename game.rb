@@ -235,7 +235,7 @@ class GameWindow < Gosu::Window
         @enemies.any? do |enemy|
           if bullet.bounds.intersects?(enemy.bounds)
             @enemies.delete(enemy)
-            enemy.death.play
+            enemy.death.play if sfx == true
             @score += (100 * (@timer.seconds / 5))
           end
         end

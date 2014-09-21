@@ -1,6 +1,6 @@
 class Player
   attr_accessor :x, :y, :move_up, :move_down, :move_right, :move_left, :player_speed, :bombs, :binding_pry, :bullet_speed_boost
-  attr_reader :bounds
+  attr_reader :bounds, :help_request
 
   def initialize(window, x, y)
     @player_image = Gosu::Image.new(window, 'img/player_small.png')
@@ -19,6 +19,7 @@ class Player
     @move_left = false
 
     @shooting = Gosu::Sample.new(window, 'music/Shooting1 2.m4a')
+    @help_request = Gosu::Sample.new(window, 'music/Help_Request.wav')
   end
 
   def bounds
@@ -51,13 +52,13 @@ class Player
     end
 
     if move_down
-      unless y >= 550
+      unless y >= (600 - @player_image.height)
         @y += @player_speed
       end
     end
 
     if move_right
-      unless x >= 750
+      unless x >= (800 - @player_image.width)
         @x += @player_speed
       end
     end

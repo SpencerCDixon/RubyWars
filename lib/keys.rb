@@ -17,6 +17,7 @@ module Keys
       if id == Gosu::KbSpace
         if @player.bombs >= 1
           @player.bombs -= 1
+          @player.help_request.play
           @enemies.clear
         end
       end

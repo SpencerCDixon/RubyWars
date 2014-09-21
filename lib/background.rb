@@ -30,12 +30,4 @@ class Background
       @bg_image1.draw(@x, @y, 0)
     end
   end
-
-  def update
-    # if @window.music == true
-    #   @theme.play
-    # else
-    #   @theme.pause
-    # end
-  end
 end
