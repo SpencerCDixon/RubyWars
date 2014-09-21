@@ -85,10 +85,8 @@ class GameWindow < Gosu::Window
 
         # Game Stats Drawings
         draw_text(360, 10,"#{@score}", @medium_font, 0xffffffff)
-
         draw_text(650, 7,"Help Requests x ", @small_font, 0xffffffff)
         draw_text(770, 7,"#{@player.bombs}", @small_font, Gosu::Color::RED)
-
         draw_text(650, 24,"Binding Prys   x ", @small_font, 0xffffffff)
         draw_text(770, 24,"#{@player.binding_pry}", @small_font, Gosu::Color::RED)
         draw_text(770, 54,"#{@timer.seconds}", @small_font, Gosu::Color::BLUE)
@@ -145,10 +143,10 @@ class GameWindow < Gosu::Window
     case
     when timer.minutes >= 4
       if @counter_spawn >= (@spawn_rate * 60.0)
-        @enemies << Enemy.new(self, rand(100), (rand(100) + 500), @player)
-        @enemies << Enemy.new(self, (rand(100) + 700), rand(100), @player)
-        @enemies << Enemy.new(self, (rand(100) + 700), (rand(100) + 500), @player)
-        @enemies << Enemy.new(self, rand(100), rand(100), @player)
+        @enemies << spawn
+        @enemies << spawn
+        @enemies << spawn
+        @enemies << spawn
         @counter_spawn = 0
       end
       if @counter_rate >= (@spawn_acc * 60.0)
@@ -157,9 +155,9 @@ class GameWindow < Gosu::Window
       end
     when timer.minutes >= 2
       if @counter_spawn >= (@spawn_rate * 60.0)
-        @enemies << Enemy.new(self, (rand(100) + 700), rand(100), @player)
-        @enemies << Enemy.new(self, (rand(100) + 700), (rand(100) + 500), @player)
-        @enemies << Enemy.new(self, rand(100), rand(100), @player)
+        @enemies << spawn
+        @enemies << spawn
+        @enemies << spawn
         @counter_spawn = 0
       end
       if @counter_rate >= (@spawn_acc * 60.0)
@@ -168,8 +166,8 @@ class GameWindow < Gosu::Window
       end
     when timer.minutes >= 1
       if @counter_spawn >= (@spawn_rate * 60.0)
-        @enemies << Enemy.new(self, (rand(100) + 700), rand(100), @player)
-        @enemies << Enemy.new(self, rand(100), rand(100), @player)
+        @enemies << spawn
+        @enemies << spawn
         @counter_spawn = 0
       end
       if @counter_rate >= (@spawn_acc * 60.0)
@@ -178,7 +176,7 @@ class GameWindow < Gosu::Window
       end
     when timer.seconds >= 0
       if @counter_spawn >= (@spawn_rate * 60.0)
-        @enemies << Enemy.new(self, rand(100), rand(100), @player)
+        @enemies << spawn
         @counter_spawn = 0
       end
       if @counter_rate >= (@spawn_acc * 60.0)
@@ -186,6 +184,26 @@ class GameWindow < Gosu::Window
         @counter_rate = 0
       end
     end
+  end
+
+  def e_top_left
+    Enemy.new(self, rand(100), rand(100), @player)
+  end
+
+  def e_top_right
+    Enemy.new(self, (rand(100) + 700), rand(100), @player)
+  end
+
+  def e_bot_right
+    Enemy.new(self, (rand(100) + 700), (rand(100) + 500), @player)
+  end
+
+  def e_bot_left
+    Enemy.new(self, rand(100), (rand(100) + 500), @player)
+  end
+
+  def spawn
+    [e_bot_left, e_top_left, e_top_right, e_bot_right].sample
   end
 
   def summon_power_ups
@@ -217,6 +235,7 @@ class GameWindow < Gosu::Window
         @enemies.any? do |enemy|
           if bullet.bounds.intersects?(enemy.bounds)
             @enemies.delete(enemy)
+            enemy.death.play
             @score += (100 * (@timer.seconds / 5))
           end
         end
@@ -254,8 +273,6 @@ class GameWindow < Gosu::Window
     @state = state
     @game_end = nil
   end
-
-
 end
 
 GameWindow.new.show

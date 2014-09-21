@@ -1,6 +1,6 @@
 class Enemy
 
-  attr_reader :x, :y, :player, :speed
+  attr_reader :x, :y, :player, :speed, :death
   attr_accessor :state
 
   def initialize(window, x, y, player)
@@ -13,6 +13,8 @@ class Enemy
 
     @speed = 4
     @bounce = false
+
+    @death = Gosu::Sample.new(@window, 'music/Shot 4.wav')
   end
 
   def bounds
