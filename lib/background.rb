@@ -9,6 +9,8 @@ class Background
     @bg_image4 = Gosu::Image.new(window, 'img/backgrounds/bg4.png')
     @bg_image5 = Gosu::Image.new(window, 'img/backgrounds/bg5.png')
     @bg_image6 = Gosu::Image.new(window, 'img/backgrounds/bg6.png')
+
+    @theme = Gosu::Song.new(window, 'music/Awake.mp3')
   end
 
   def draw
@@ -26,5 +28,9 @@ class Background
     else
       @bg_image1.draw(@x, @y, 0)
     end
+  end
+
+  def update
+    @music == true ? @theme.play : @theme.pause
   end
 end

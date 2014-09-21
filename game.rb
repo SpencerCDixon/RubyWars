@@ -86,9 +86,6 @@ class GameWindow < Gosu::Window
         end
 
         # Game Stats Drawings
-
-        # @small_font.draw("Min: #{@timer.minutes} Sec: #{@timer.seconds}", 100, 30, 5, 1.0, 1.0, 0xffffffff)
-        # @small_font.draw("#{@score}", 345, 30, 5, 1.0, 1.0, 0xffffffff)
         draw_text(360, 10,"#{@score}", @medium_font, 0xffffffff)
 
         draw_text(650, 7,"Help Requests x ", @small_font, 0xffffffff)
@@ -115,6 +112,7 @@ class GameWindow < Gosu::Window
 
   def update
     menu_action = @menu.update
+    @background.update
     if menu_action == "start"
       @state = :running
       menu_action = nil
