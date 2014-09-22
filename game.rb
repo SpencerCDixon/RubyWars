@@ -33,8 +33,7 @@ class GameWindow < Gosu::Window
     @player = Player.new(self, 400, 50)
     @uri = URI('http://localhost:4567')
 
-
-    # Power Up
+    # Power Ups
     @power_ups = summon_power_ups
     @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first
     @current_boost = []
@@ -115,13 +114,17 @@ class GameWindow < Gosu::Window
 
   def update
     menu_action = @menu.update
-    @background.menu_music.play if @state == :menu
-
+    if @state == :menu && @music == true
+      @background.menu_music.play
+    else
+      @background.menu_music.pause
+    end
 
     if menu_action == "start"
       @background.menu_music.pause
-      @background.theme.play
+      @background.theme.play if @music
       @state = :running
+      @timer = Timer.new
     elsif menu_action == "mtoggle"
       @music == true ? @music = false : @music = true
     elsif menu_action == "sfxtoggle"
@@ -144,6 +147,8 @@ class GameWindow < Gosu::Window
     end
 
     if @state == :lose
+      @background.theme.pause
+      @background.menu_music.play if @music
       @enemies.each {|e| e.state == :pause}
     end
   end
@@ -152,10 +157,7 @@ class GameWindow < Gosu::Window
     case
     when timer.minutes >= 4
       if @counter_spawn >= (@spawn_rate * 60.0)
-        @enemies << spawn
-        @enemies << spawn
-        @enemies << spawn
-        @enemies << spawn
+        4.times { @enemies << spawn }
         @counter_spawn = 0
       end
       if @counter_rate >= (@spawn_acc * 60.0)
@@ -164,9 +166,7 @@ class GameWindow < Gosu::Window
       end
     when timer.minutes >= 2
       if @counter_spawn >= (@spawn_rate * 60.0)
-        @enemies << spawn
-        @enemies << spawn
-        @enemies << spawn
+        3.times { @enemies << spawn }
         @counter_spawn = 0
       end
       if @counter_rate >= (@spawn_acc * 60.0)
@@ -175,8 +175,7 @@ class GameWindow < Gosu::Window
       end
     when timer.minutes >= 1
       if @counter_spawn >= (@spawn_rate * 60.0)
-        @enemies << spawn
-        @enemies << spawn
+        2.times { @enemies << spawn }
         @counter_spawn = 0
       end
       if @counter_rate >= (@spawn_acc * 60.0)
@@ -284,7 +283,11 @@ class GameWindow < Gosu::Window
     @current_boost = []
     @score = 0
     @state = state
+    @dropped_power_up = nil
     @game_end = nil
+    @p_up_counter = 0
+    @counter_spawn = 0
+    @counter_rate = 0
   end
 end
 

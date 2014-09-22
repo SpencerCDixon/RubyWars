@@ -17,13 +17,14 @@ module Keys
       if id == Gosu::KbSpace
         if @player.bombs >= 1
           @player.bombs -= 1
-          @player.help_request.play
+          @player.help_request_sfx.play if @sfx
           @enemies.clear
         end
       end
       if id == Gosu::KbP
         if @player.binding_pry >= 1
           @player.binding_pry -= 1
+          @player.pry_sfx.play if @sfx
           if @timer.seconds < (@timer.seconds + 3)
             @enemies.each {|e| e.state = :pause}
           else

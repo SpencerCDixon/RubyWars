@@ -11,7 +11,8 @@ class Background
     @bg_image5 = Gosu::Image.new(window, 'img/backgrounds/bg5.png')
     @bg_image6 = Gosu::Image.new(window, 'img/backgrounds/bg6.png')
 
-    @theme = Gosu::Song.new(window, 'music/Awake.mp3')
+    @song_path = ['music/cherry.mp3', 'music/Awake.mp3', 'music/L.mp3'].sample
+    @theme = Gosu::Song.new(window, @song_path)
     @menu_music = Gosu::Song.new(window, 'music/menu.mp3')
   end
 

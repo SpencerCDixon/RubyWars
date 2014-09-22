@@ -1,6 +1,6 @@
 class Player
   attr_accessor :x, :y, :move_up, :move_down, :move_right, :move_left, :player_speed, :bombs, :binding_pry, :bullet_speed_boost
-  attr_reader :bounds, :help_request
+  attr_reader :bounds, :help_request_sfx, :pry_sfx
 
   def initialize(window, x, y)
     @player_image = Gosu::Image.new(window, 'img/player_small.png')
@@ -19,7 +19,9 @@ class Player
     @move_left = false
 
     @shooting = Gosu::Sample.new(window, 'music/Shooting1 2.m4a')
-    @help_request = Gosu::Sample.new(window, 'music/Help_Request.wav')
+    @help_request_sfx = Gosu::Sample.new(window, 'music/Help_Request.wav')
+    @pry_sfx = Gosu::Sample.new(window, 'music/binding_pry.mp3')
+
   end
 
   def bounds
