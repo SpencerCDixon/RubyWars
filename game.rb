@@ -31,7 +31,7 @@ class GameWindow < Gosu::Window
     self.caption = "Ruby Wars"
     @background = Background.new(self, 0, 0)
     @player = Player.new(self, 400, 50)
-    @uri = URI('http://localhost:4567')
+    @uri = URI('http://rubywars.herokuapp.com/')
 
     # Power Ups
     @power_ups = summon_power_ups
