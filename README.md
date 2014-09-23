@@ -31,3 +31,11 @@ This game includes many images and sounds that are copyrighted by their respecti
 
 
 ## Screenshots
+Building the program:
+!(https://github.com/SpencerCDixon/RubyWars/blob/master/readme/program.png)
+
+Help request:
+!(https://github.com/SpencerCDixon/RubyWars/blob/master/readme/help_request.png)
+
+Gameover:
+!(https://github.com/SpencerCDixon/RubyWars/blob/master/readme/game_over.png)
