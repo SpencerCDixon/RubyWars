@@ -51,6 +51,9 @@ class Menu
     # Credits
     draw_text(595, 545, "Created by Spencer Dixon ", @control_font, 0xffffffff )
     draw_text(595, 565, "github.com/SpencerCDixon", @control_font, 0xffffffff )
+
+    # Highscore
+    draw_text(280, 565, "High Scores: rubywars.herokuapp.com ", @control_font, 0xffffffff )
   end
 
   def update

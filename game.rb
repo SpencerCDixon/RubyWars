@@ -80,7 +80,7 @@ class GameWindow < Gosu::Window
 
         # Drop Power Ups
         if @p_up_counter >= @pwr_up_frequency && @p_up_counter <= @pwr_up_frequency  + @pwr_up_spawn_time
-          @dropped_power_up.draw
+          @dropped_power_up.draw if !@dropped_power_up.nil?
           if @p_up_counter == @pwr_up_frequency + @pwr_up_spawn_time
             @p_up_counter = 0
             @dropped_power_up = @power_ups.select {|o| o.unused? == true}.first

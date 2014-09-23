@@ -19,14 +19,15 @@ $ ruby game.rb "Spencer Dixon"
 
 ## Controls
 
-Move: A/W/S/D (A = left, S = down, W = up, D = right)
-Shoot: J/I/K/L (J = left, K = down, I = up, L = right)
+Move: A/W/S/D (A = left, S = down, W = up, D = right)  
+Shoot: J/I/K/L (J = left, K = down, I = up, L = right)  
 
-Space: Use help request (if you have any)
-P: Use binding.pry (if you have any)
+Space: Use help request (if you have any)  
+P: Use binding.pry (if you have any)  
 
 R: Reset game if there was a gameover
 
----
 This game includes many images and sounds that are copyrighted by their respective owners.
----
+
+
+## Screenshots
