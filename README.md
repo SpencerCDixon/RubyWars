@@ -1,5 +1,3 @@
-# Ruby Wars
-
 ![Title](https://github.com/SpencerCDixon/RubyWars/blob/master/img/title.png)
 
 Ruby Wars is a knockoff of the arcade classic Geometry Wars.  The goal of the game is to build a program that will save the world.  Along the way you have to fight off all the bugs trying to destroy your program.  If you get hit by a bug then the game is over.  For each bug you kill your points go up and the longer you stay alive the more points you get for killing bugs.
